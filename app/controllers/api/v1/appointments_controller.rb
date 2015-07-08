@@ -1,13 +1,13 @@
 class Api::V1::AppointmentsController < ApplicationController
   protect_from_forgery with: :null_session
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
   acts_as_token_authentication_handler_for User
+  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
 
   # GET /appointments
   # GET /appointments.json
   def index
-    @appointments = Appointment.all
+    @appointments = current_user.appointments
     respond_to do |format|
       format.json { render json: @appointments }
     end
@@ -23,7 +23,7 @@ class Api::V1::AppointmentsController < ApplicationController
 
   # GET /appointments/new
   def new
-    @appointment = Appointment.new
+    @appointment = current_user.appointments.new
     respond_to do |format|
       format.json { render json: @appointment }
     end
@@ -39,7 +39,7 @@ class Api::V1::AppointmentsController < ApplicationController
   # POST /appointments
   # POST /appointments.json
   def create
-    @appointment = Appointment.new(appointment_params)
+    @appointment = current_user.appointments.new(appointment_params)
 
     respond_to do |format|
       if @appointment.save
@@ -74,7 +74,7 @@ class Api::V1::AppointmentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_appointment
-      @appointment = Appointment.find(params[:id])
+      @appointment = current_user.appointments.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

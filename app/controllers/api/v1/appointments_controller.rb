@@ -1,6 +1,8 @@
 class Api::V1::AppointmentsController < ApplicationController
   protect_from_forgery with: :null_session
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  acts_as_token_authentication_handler_for User
+
 
   # GET /appointments
   # GET /appointments.json
